@@ -1,49 +1,36 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VIP 会员支付</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付确认</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #222); text-align: center; padding: 30px 20px; }
-        .qr-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; }
-        .qr-code { width: 220px; height: 220px; border-radius: 10px; border: 1px solid #eee; }
-        .price { font-size: 32px; color: #0088cc; font-weight: bold; margin: 15px 0; }
-        .hint { color: #888; font-size: 14px; margin-bottom: 20px; }
+        body { font-family: sans-serif; text-align: center; padding: 40px 20px; background: #fdfdfd; }
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .qr-code { width: 200px; margin: 20px 0; border: 1px solid #eee; }
+        .btn { background: #0088cc; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="qr-card">
-        <h3>订阅 VIP 会员</h3>
-        <div class="price">￥19.90</div>
-        <img src="pay_code.png" class="qr-code" alt="收款码">
-        <p class="hint">扫码转账后，点击下方蓝色【确认】按钮</p>
+    <div class="card">
+        <h3>会员支付</h3>
+        <p>支付 19.9 元后点击下方按钮</p>
+        <img src="pay_code.png" class="qr-code">
+        <button class="btn" onclick="verify()">我已支付，通知老板</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        tg.expand();
 
-        // 这种底部原生按钮的点击穿透力最强
-        tg.MainButton.setText("确认已支付，通知老板核实");
-        tg.MainButton.show();
-        
-        tg.MainButton.onClick(function() {
-            try {
-                // 弹出此弹窗说明 JS 运行正常
-                alert("正在尝试发送通知..."); 
-                
-                // 发送数据
-                tg.sendData("request_payment_verify");
-                
-                // 延迟关闭，确保数据传出
-                setTimeout(() => { tg.close(); }, 500);
-            } catch (e) {
-                alert("JS报错: " + e.message);
-            }
-        });
+        function verify() {
+            // 这种跳转方式不受 Telegram sendData 限制的影响
+            // 请务必把 iop8900_bot 换成你真实的机器人用户名
+            const bot_username = "iop8900_bot"; 
+            tg.openTelegramLink(`https://t.me/${bot_username}?start=payverify`);
+            tg.close();
+        }
     </script>
 </body>
 </html>
