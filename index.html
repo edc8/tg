@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>会员支付确认</title>
+    <title>VIP 会员支付</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #222); text-align: center; padding: 40px 20px; }
+        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #222); text-align: center; padding: 30px 20px; }
         .qr-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; }
-        .qr-code { width: 200px; height: 200px; border-radius: 8px; }
-        .price { font-size: 28px; color: #0088cc; font-weight: bold; margin: 15px 0; }
-        .hint { color: #888; font-size: 13px; margin-bottom: 25px; }
+        .qr-code { width: 220px; height: 220px; border-radius: 10px; border: 1px solid #eee; }
+        .price { font-size: 32px; color: #0088cc; font-weight: bold; margin: 15px 0; }
+        .hint { color: #888; font-size: 14px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <div class="qr-card">
-        <h3>VIP 会员订阅</h3>
+        <h3>订阅 VIP 会员</h3>
         <div class="price">￥19.90</div>
         <img src="pay_code.png" class="qr-code" alt="收款码">
-        <p class="hint">扫码支付后，请点击下方蓝色按钮确认</p>
+        <p class="hint">扫码转账后，点击下方蓝色【确认】按钮</p>
     </div>
 
     <script>
@@ -26,17 +26,22 @@
         tg.ready();
         tg.expand();
 
-        // 配置 Telegram 底部的原生主按钮（最稳定）
-        tg.MainButton.setText("我已支付，通知老板核实");
+        // 这种底部原生按钮的点击穿透力最强
+        tg.MainButton.setText("确认已支付，通知老板核实");
         tg.MainButton.show();
         
         tg.MainButton.onClick(function() {
             try {
-                // 关键信号：必须与后端代码匹配
+                // 弹出此弹窗说明 JS 运行正常
+                alert("正在尝试发送通知..."); 
+                
+                // 发送数据
                 tg.sendData("request_payment_verify");
-                tg.close();
+                
+                // 延迟关闭，确保数据传出
+                setTimeout(() => { tg.close(); }, 500);
             } catch (e) {
-                alert("发送失败，请确保在私聊中使用: " + e.message);
+                alert("JS报错: " + e.message);
             }
         });
     </script>
