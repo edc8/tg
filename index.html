@@ -1,39 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>会员支付</title>
+    <title>会员支付确认</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #222222); text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: 0 auto; }
-        .qr-code { width: 220px; height: 220px; margin: 20px auto; border: 5px solid #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .price { font-size: 24px; font-weight: bold; color: #0088cc; margin: 10px 0; }
-        .btn { background-color: var(--tg-theme-button-color, #0088cc); color: var(--tg-theme-button-text-color, #ffffff); border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 20px; }
-        .hint { font-size: 12px; color: #888; margin-top: 10px; }
+        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #222); text-align: center; padding: 40px 20px; }
+        .qr-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; }
+        .qr-code { width: 200px; height: 200px; border-radius: 8px; }
+        .price { font-size: 28px; color: #0088cc; font-weight: bold; margin: 15px 0; }
+        .hint { color: #888; font-size: 13px; margin-bottom: 25px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>加入 VIP 私密群</h2>
-        <p>请扫码支付，核实后自动发货</p>
+    <div class="qr-card">
+        <h3>VIP 会员订阅</h3>
         <div class="price">￥19.90</div>
-        <img src="pay_code.png" alt="微信/支付宝收款码" class="qr-code">
-        <button class="btn" onclick="submitPayment()">我已支付，申请入群</button>
-        <p class="hint">支付时请备注您的 Telegram 用户名</p>
+        <img src="pay_code.png" class="qr-code" alt="收款码">
+        <p class="hint">扫码支付后，请点击下方蓝色按钮确认</p>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready(); // 初始化
-        tg.expand(); // 自动展开高度
+        tg.ready();
+        tg.expand();
 
-        function submitPayment() {
-            // 向机器人发送一个标记数据，触发后端的 verify 逻辑
-            tg.sendData("request_payment_verify");
-            tg.close(); // 提交后关闭小程序
-        }
+        // 配置 Telegram 底部的原生主按钮（最稳定）
+        tg.MainButton.setText("我已支付，通知老板核实");
+        tg.MainButton.show();
+        
+        tg.MainButton.onClick(function() {
+            try {
+                // 关键信号：必须与后端代码匹配
+                tg.sendData("request_payment_verify");
+                tg.close();
+            } catch (e) {
+                alert("发送失败，请确保在私聊中使用: " + e.message);
+            }
+        });
     </script>
 </body>
 </html>
