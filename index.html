@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>会员支付</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #222222); text-align: center; padding: 20px; }
+        .container { max-width: 400px; margin: 0 auto; }
+        .qr-code { width: 220px; height: 220px; margin: 20px auto; border: 5px solid #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .price { font-size: 24px; font-weight: bold; color: #0088cc; margin: 10px 0; }
+        .btn { background-color: var(--tg-theme-button-color, #0088cc); color: var(--tg-theme-button-text-color, #ffffff); border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .hint { font-size: 12px; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>加入 VIP 私密群</h2>
+        <p>请扫码支付，核实后自动发货</p>
+        <div class="price">￥19.90</div>
+        <img src="pay_code.png" alt="微信/支付宝收款码" class="qr-code">
+        <button class="btn" onclick="submitPayment()">我已支付，申请入群</button>
+        <p class="hint">支付时请备注您的 Telegram 用户名</p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready(); // 初始化
+        tg.expand(); // 自动展开高度
+
+        function submitPayment() {
+            // 向机器人发送一个标记数据，触发后端的 verify 逻辑
+            tg.sendData("request_payment_verify");
+            tg.close(); // 提交后关闭小程序
+        }
+    </script>
+</body>
+</html>
